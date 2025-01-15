@@ -1,37 +1,58 @@
 import socket
 import threading
 
-def send_message(conn,s):
+clients = []
+
+
+
+def boardcast(message, sender_conn = None):
+    for client in clients:
+        if client != sender_conn:
+            try:
+                client.send((message+"\n").encode())
+            except:
+                clients.remove(client)
+
+def handle_client(conn, addr):
+    print(f"New client connect from {addr}")
+    message_received = ""
     while True:
-        message = input("Enter a message if you want to exit, type 'exit': ")
-        if message == "exit":
-            flag[0] = True
-            s.close()
+        try:
+            while True:
+                data = conn.recv(32)
+                if data:
+                    message_received += data.decode()
+                    if message_received.endswith("\n"):
+                        break
+                else:
+                    print(f"Connection lost from {addr}")
+                    clients.remove(conn)
+                    conn.close()
+                    return
+            if message_received:
+                print(f"\n Received message:{message_received}")
+                messsage_from_client = f"Client {addr}: {message_received}"
+                boardcast((messsage_from_client), conn)
+                message_received = ""
+        except:
+            print(f"Connection lost from {addr}")
+            clients.remove(conn)
+            conn.close()
+            return
+        
+def send_server_message():
+    while True:
+        message = input("Enter a message to broadcast to all clients: ")
+        if message.lower() == "exit":
             break
-        conn.send((message+"\n").encode())
-        print("Message sent ")
-
-# def receive_message(conn):
-#     while flag[0] == False:
-#         message_received = ""
-#         while True:
-#             data = conn.recv(32)
-#             if data:
-#                 message_received += data.decode()
-#                 if message_received.endswith("\n"):
-#                     break
-#             else:
-#                 print("Connection lost!")
-#                 flag[0] = True
-#                 break
-#         if message_received:
-#             print("\n"+ "Received message: ", message_received)
-
+        print(f"Broadcasting message: {message}")
+        boardcast_message = f"Server: {message}"
+        boardcast(boardcast_message, None)
+        print("Message broadcasted")
 
 HOST = '0.0.0.0'
 PORT = 21002
 s = None
-flag = [False] 
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -50,27 +71,23 @@ except OSError as msg:
     s.close()
     exit(1)
 
-conn, addr = s.accept()
-with conn:
-    t1 = threading.Thread(target=send_message, args=(conn,s))
-    t1.start()
+t1 = threading.Thread(target=send_server_message)
+t1.daemon = True
+t1.start()
 
-    while flag[0] == False:
-        message_received = ""
-        while True:
-            data = conn.recv(32)
-            if data:
-                message_received += data.decode()
-                if message_received.endswith("\n"):
-                    break
-            else:
-                print("Connection lost!")
-                flag[0] = True
-                break
-        if not message_received:
-            break
-        if message_received:
-            print("\n"+ "Received message: ", message_received)
+while True:
+    try:
+        conn, addr = s.accept()
+        clients.append(conn)
+        t = threading.Thread(target=handle_client, args=(conn, addr))
+        t.daemon = True
+        t.start()
+    except KeyboardInterrupt:
+        print("disconnecting clients")
+        break
 
-
+for c in clients:
+    c.close()
+if s:
+    s.close()
 print("Server finished")
