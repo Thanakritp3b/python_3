@@ -1,10 +1,37 @@
 import socket
-import sys
-from pyexpat.errors import messages
+import threading
+
+def send_message(conn,s):
+    while True:
+        message = input("Enter a message if you want to exit, type 'exit': ")
+        if message == "exit":
+            flag[0] = True
+            s.close()
+            break
+        conn.send((message+"\n").encode())
+        print("Message sent ")
+
+# def receive_message(conn):
+#     while flag[0] == False:
+#         message_received = ""
+#         while True:
+#             data = conn.recv(32)
+#             if data:
+#                 message_received += data.decode()
+#                 if message_received.endswith("\n"):
+#                     break
+#             else:
+#                 print("Connection lost!")
+#                 flag[0] = True
+#                 break
+#         if message_received:
+#             print("\n"+ "Received message: ", message_received)
+
 
 HOST = '0.0.0.0'
 PORT = 21002
 s = None
+flag = [False] 
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,7 +52,10 @@ except OSError as msg:
 
 conn, addr = s.accept()
 with conn:
-    while True:
+    t1 = threading.Thread(target=send_message, args=(conn,s))
+    t1.start()
+
+    while flag[0] == False:
         message_received = ""
         while True:
             data = conn.recv(32)
@@ -35,18 +65,12 @@ with conn:
                     break
             else:
                 print("Connection lost!")
+                flag[0] = True
                 break
-
-        if message_received:
-            print("Received message: ", message_received)
-            message_send = input("Enter a message if you want to exit, type 'exit': ")
-            if message_send == "exit":
-                break
-            conn.send((message_send + "\n").encode())
-            print("Message sent waiting for response")
-
-        else:
+        if not message_received:
             break
+        if message_received:
+            print("\n"+ "Received message: ", message_received)
 
-s.close()
+
 print("Server finished")
