@@ -1,6 +1,5 @@
 import socket
 import threading
-import sys
 
 
 def send_message(s):
@@ -26,7 +25,7 @@ def receive_message(s):
                     print("Connection lost!")
                     return
             if message_received:
-                print('\n'+"Received message: ", message_received)
+                print("Received message: ", message_received)
 
         except:
             print("Connection lost!")
