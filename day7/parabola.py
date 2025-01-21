@@ -21,11 +21,9 @@ while True:
     screen.fill((255, 255, 255))
     prev_x = -2
     prev_y = f(prev_x)
-    N = 100
     h_max = 4
-
-    for i in range(N):
-        x = -2 + 4 * i/N
+    for i in range(w):
+        x = -2 + 4 * i/w
         y = f(x)
         pygame.draw.line(screen, (0, 0, 0),
                         (w//2 + prev_x * w/h_max,h - prev_y * h/h_max),
