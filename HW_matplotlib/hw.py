@@ -62,8 +62,6 @@ def plot_graph(segments, filter, rectangle):
 
 
 
-
-
 if __name__ == "__main__":
     segments = gen_segments()
     rectangle = [2, 2, 8, 8]
