@@ -1,2 +1,2 @@
-Python-3 HS@UTCC
-# virtual_environment-
+# Python-3 HS@UTCC
+* Thanakrit Pongtanawannagon(Pre) *
