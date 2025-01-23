@@ -4,7 +4,7 @@ import time
 import numpy as np
 from math import sqrt
 
-def gen_points(centroids, points_per_cent = 300 ,std_dev = 2.0):
+def gen_points(centroids, points_per_cent = 300 ,std_dev = 0.5):
     points = []
     for cx, cy in centroids:
         for _ in range(points_per_cent):
