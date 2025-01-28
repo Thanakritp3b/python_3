@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+</head>
+<body>
+    <form action="/plot" method="post">
+        <div>
+        <label for="start">Start:</label>
+            <input type="number" id="x_form" name="x_form" step="0.1" value="0">
+        </div>
+        <div>
+            <label for="end">End:</label>
+            <input type="number" id="x_to" name="x_to" step="0.1" value="10">
+        </div>
+        <div>
+            <label for="graph_type">Plot Type:</label>
+            <select name="graph_type" id="graph_type">
+                <option value="sin" name="graph_type">sin</option>
+                <option value="cos" name="graph_type">cos</option>
+                <option value="square" name="graph_type">square</option>
+                <option value="sqrt" name="graph_type">sqrt</option>
+            </select>
+        </div>
+        <input type="submit" value="Generate Plot">
+    </form>
+    {% if plot_url %}
+    <img src="{{ plot_url }}" alt="Plot">
+    {% endif %}
+</body>
+</html>
