@@ -6,7 +6,7 @@ import numpy as np
 app = Flask(__name__)
 
 def plot_graph(x_form, x_to, graph_types, color,seperate):
-    if len(graph_types) == 0:
+    if len(graph_types) <= 1:
         seperate = '0'
     if seperate == '1':   
         fig, axs = plt.subplots(len(graph_types), 1, figsize=(8, 6))
