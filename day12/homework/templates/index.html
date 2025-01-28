@@ -16,13 +16,24 @@
             <input type="number" id="x_to" name="x_to" step="0.1" value="10">
         </div>
         <div>
-            <label for="graph_type">Plot Type:</label>
-            <select name="graph_type" id="graph_type">
-                <option value="sin" name="graph_type">sin</option>
-                <option value="cos" name="graph_type">cos</option>
-                <option value="square" name="graph_type">square</option>
-                <option value="sqrt" name="graph_type">sqrt</option>
+            <label for="color">Color:</label>
+            <select name="color" id="color">
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="black">Black</option>
+                <option value="purple">Purple</option>
             </select>
+        </div>
+        <div>
+            <label>Plot Type:</label>
+            <input type="checkbox" name="graph_type[]" value="sin"> Sin
+            <input type="checkbox" name="graph_type[]" value="cos"> Cos
+            <input type="checkbox" name="graph_type[]" value="square"> Square
+            <input type="checkbox" name="graph_type[]" value="sqrt"> Sqrt
+        </div>
+        <div>
+            <input type="checkbox" name="seperate" value="1"> seperate graph
         </div>
         <input type="submit" value="Generate Plot">
     </form>
